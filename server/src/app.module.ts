@@ -5,9 +5,34 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { ChatroomModule } from './chatroom/chatroom.module';
 import { UserModule } from './user/user.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ApolloDriver } from '@nestjs/apollo';
+import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
 
 @Module({
-  imports: [PrismaModule, AuthModule, ChatroomModule, UserModule],
+  imports: [
+    PrismaModule,
+    AuthModule,
+    ChatroomModule,
+    UserModule,
+    GraphQLModule.forRootAsync({
+      imports: [ConfigModule, AppModule],
+      inject: [ConfigService],
+      driver: ApolloDriver,
+      useFactory: async (configService: ConfigService) => {
+        return {
+          installSubscriptionHandlers: true,
+          playground: true,
+          autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+          sortSchema: true,
+        };
+      },
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

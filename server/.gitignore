@@ -26,10 +26,36 @@ lerna-debug.log*
 *.launch
 .settings/
 *.sublime-workspace
+.vscode/*
 
 # IDE - VSCode
-.vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Prisma
+prisma/*.db
+prisma/migrations/*
+!prisma/migrations/migration_lock.toml
+
+# Cache directories
+.cache/
+.temp/
+.tmp/
+
+# Build files
+build/
+dist/
+out/
+
+# Misc
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
