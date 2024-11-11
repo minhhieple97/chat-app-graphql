@@ -21,14 +21,20 @@ type LoginResponse {
 }
 
 type Mutation {
+  deleteUser: Boolean!
   login(loginInput: LoginDto!): LoginResponse!
   logout: String!
   refreshToken: String!
   register(registerInput: RegisterDto!): RegisterResponse!
+  updateAvatar(base64Image: String!): User!
+  updateUser(file: Upload, input: UpdateUserInput!): User!
 }
 
 type Query {
+  getUser: UserResponse!
+  getUsersOfChatroom(chatroomId: Float!): [User!]!
   hello: String!
+  searchUsers(fullname: String!): UsersResponse!
 }
 
 input RegisterDto {
@@ -46,6 +52,15 @@ type RegisterResponse {
   user: User!
 }
 
+input UpdateUserInput {
+  avatarData: String
+  email: String
+  fullname: String
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
 type User {
   avatarUrl: String
   createdAt: DateTime!
@@ -53,4 +68,16 @@ type User {
   id: ID!
   name: String!
   updatedAt: DateTime!
+}
+
+type UserResponse {
+  message: String
+  success: Boolean!
+  user: User!
+}
+
+type UsersResponse {
+  success: Boolean!
+  total: Float!
+  users: [User!]!
 }
