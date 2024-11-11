@@ -9,9 +9,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ApolloDriver } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
+import { AwsModule } from './aws/aws.module';
 
 @Module({
   imports: [
+    AwsModule,
     PrismaModule,
     AuthModule,
     ChatroomModule,
@@ -20,7 +22,7 @@ import { join } from 'path';
       imports: [ConfigModule, AppModule],
       inject: [ConfigService],
       driver: ApolloDriver,
-      useFactory: async (configService: ConfigService) => {
+      useFactory: async () => {
         return {
           installSubscriptionHandlers: true,
           playground: true,
