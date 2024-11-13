@@ -13,8 +13,12 @@
   "dependencies": {
     "@apollo/client": "^3.11.10",
     "@graphql-typed-document-node/core": "^3.2.0",
+    "@radix-ui/react-avatar": "^1.1.1",
+    "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-scroll-area": "^1.2.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@types/apollo-upload-client": "^18.0.0",
+    "@vitejs/plugin-react": "^4.3.3",
     "apollo-upload-client": "^18.0.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

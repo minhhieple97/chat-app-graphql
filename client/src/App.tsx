@@ -1,7 +1,12 @@
-import { Button } from './components/ui/button';
+import { MainLayout } from './components/MainLayout';
+import { ChatContent } from './features/chat/ChatContent';
 
 function App() {
-  return <Button type="submit">Click me</Button>;
+  return (
+    <MainLayout>
+      <ChatContent />
+    </MainLayout>
+  );
 }
 
 export default App;
