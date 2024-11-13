@@ -1,19 +1,10 @@
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { AuthFormData, AuthFormProps } from './type';
+import { AuthFormProps } from './types';
+import { useAuthForm } from './useAuthForm';
 
-export const AuthForm = ({ mode, onSubmit, onModeChange }: AuthFormProps) => {
-  const [formData, setFormData] = useState<AuthFormData>({
-    fullname: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+export const AuthForm = ({ mode, onSubmit, onModeChange, isLoading, errors }: AuthFormProps) => {
+  const { formData, handleChange } = useAuthForm();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,41 +14,55 @@ export const AuthForm = ({ mode, onSubmit, onModeChange }: AuthFormProps) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {mode === 'register' && (
+        <div className="space-y-2">
+          <Input
+            placeholder="Full Name"
+            name="fullname"
+            value={formData.fullname}
+            onChange={handleChange}
+            required
+          />
+          {errors.fullname && <p className="text-sm text-destructive">{errors.fullname}</p>}
+        </div>
+      )}
+      <div className="space-y-2">
         <Input
-          placeholder="Full Name"
-          name="fullname"
-          value={formData.fullname}
+          placeholder="Email"
+          type="email"
+          name="email"
+          value={formData.email}
           onChange={handleChange}
           required
         />
-      )}
-      <Input
-        placeholder="Email"
-        type="email"
-        name="email"
-        value={formData.email}
-        onChange={handleChange}
-        required
-      />
-      <Input
-        placeholder="Password"
-        type="password"
-        name="password"
-        value={formData.password}
-        onChange={handleChange}
-        required
-      />
-      {mode === 'register' && (
+        {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
+      </div>
+      <div className="space-y-2">
         <Input
-          placeholder="Confirm Password"
+          placeholder="Password"
           type="password"
-          name="confirmPassword"
-          value={formData.confirmPassword}
+          name="password"
+          value={formData.password}
           onChange={handleChange}
           required
         />
+        {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
+      </div>
+      {mode === 'register' && (
+        <div className="space-y-2">
+          <Input
+            placeholder="Confirm Password"
+            type="password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
+          />
+          {errors.confirmPassword && (
+            <p className="text-sm text-destructive">{errors.confirmPassword}</p>
+          )}
+        </div>
       )}
-      <Button type="submit" className="w-full">
+      <Button type="submit" className="w-full" disabled={isLoading}>
         {mode === 'login' ? 'Login' : 'Register'}
       </Button>
       <div className="text-center text-sm text-muted-foreground">

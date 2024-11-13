@@ -11,4 +11,6 @@ export interface AuthFormProps {
   mode: AuthMode;
   onSubmit: (data: AuthFormData) => void;
   onModeChange: (mode: AuthMode) => void;
+  isLoading: boolean;
+  errors: Record<string, string>;
 }
