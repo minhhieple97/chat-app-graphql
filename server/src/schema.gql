@@ -33,7 +33,6 @@ type Mutation {
 type Query {
   getUser: UserResponse!
   getUsersOfChatroom(chatroomId: Float!): [User!]!
-  hello: String!
   searchUsers(fullname: String!): UsersResponse!
 }
 
@@ -65,8 +64,8 @@ type User {
   avatarUrl: String
   createdAt: DateTime!
   email: String!
-  id: ID!
-  name: String!
+  fullname: String!
+  id: Float
   updatedAt: DateTime!
 }
 
