@@ -72,7 +72,10 @@ export class AuthService {
     response.cookie('refresh_token', refreshToken, {
       httpOnly: true,
     });
-    return { user };
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
   async validateUser(loginDto: LoginDto) {
     const user = await this.prisma.user.findUnique({
@@ -98,7 +101,11 @@ export class AuthService {
         email: registerDto.email,
       },
     });
-    return this.issueTokens(user, response);
+    const { accessToken, refreshToken } = await this.issueTokens(
+      user,
+      response,
+    );
+    return { user, accessToken, refreshToken };
   }
   async login(loginDto: LoginDto, response: Response) {
     const user = await this.validateUser(loginDto);
@@ -107,7 +114,11 @@ export class AuthService {
         invalidCredentials: 'Invalid credentials',
       });
     }
-    return this.issueTokens(user, response);
+    const { accessToken, refreshToken } = await this.issueTokens(
+      user,
+      response,
+    );
+    return { user, accessToken, refreshToken };
   }
   async logout(response: Response) {
     response.clearCookie('access_token');

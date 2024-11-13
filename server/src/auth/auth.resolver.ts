@@ -16,13 +16,11 @@ export class AuthResolver {
     @Args('registerInput') registerDto: RegisterDto,
     @Context() context: { res: Response },
   ) {
-    if (registerDto.password !== registerDto.confirmPassword) {
-      throw new BadRequestException({
-        confirmPassword: 'Password and confirm password are not the same.',
-      });
-    }
-    const { user } = await this.authService.register(registerDto, context.res);
-    return { user };
+    const { user, refreshToken, accessToken } = await this.authService.register(
+      registerDto,
+      context.res,
+    );
+    return { user, refreshToken, accessToken, success: true };
   }
 
   @Mutation(() => LoginResponse)
@@ -30,8 +28,11 @@ export class AuthResolver {
     @Args('loginInput') loginDto: LoginDto,
     @Context() context: { res: Response },
   ) {
-    const response = await this.authService.login(loginDto, context.res);
-    return response;
+    const { user, refreshToken, accessToken } = await this.authService.login(
+      loginDto,
+      context.res,
+    );
+    return { user, refreshToken, accessToken, success: true };
   }
 
   @Mutation(() => String)

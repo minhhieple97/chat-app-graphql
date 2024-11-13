@@ -7,14 +7,7 @@ export const REGISTER_USER = gql`
     $password: String!
     $confirmPassword: String!
   ) {
-    register(
-      registerInput: {
-        fullname: $fullname
-        email: $email
-        password: $password
-        confirmPassword: $confirmPassword
-      }
-    ) {
+    register(registerInput: { fullname: $fullname, email: $email, password: $password }) {
       accessToken
       refreshToken
       success
