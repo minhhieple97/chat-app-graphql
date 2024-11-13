@@ -10,6 +10,7 @@ interface UserState {
   updateProfileImage: (image: string) => void;
   updateUsername: (name: string) => void;
   setUser: (user: User) => void;
+  resetUser: () => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -28,6 +29,13 @@ export const useUserStore = create<UserState>()(
           avatarUrl: user.avatarUrl,
           fullname: user.fullname,
           email: user.email,
+        }),
+      resetUser: () =>
+        set({
+          id: undefined,
+          fullname: '',
+          email: '',
+          avatarUrl: null,
         }),
     }),
     {
