@@ -16,8 +16,9 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n  mutation LoginUser($email: String!, $password: String!) {\n    login(loginInput: { email: $email, password: $password }) {\n      user {\n        email\n        id\n        fullname\n        avatarUrl\n      }\n      accessToken\n      refreshToken\n      success\n      message\n    }\n  }\n": types.LoginUserDocument,
     "\n  mutation LogoutUser {\n    logout\n  }\n": types.LogoutUserDocument,
-    "\n  mutation RegisterUser(\n    $fullname: String!\n    $email: String!\n    $password: String!\n    $confirmPassword: String!\n  ) {\n    register(registerInput: { fullname: $fullname, email: $email, password: $password }) {\n      accessToken\n      refreshToken\n      success\n      message\n      user {\n        id\n        fullname\n        email\n        avatarUrl\n        createdAt\n        updatedAt\n      }\n    }\n  }\n": types.RegisterUserDocument,
-    "\n  mutation UpdateUser($fullname: String!, $file: Upload) {\n    updateUser(input: { fullname: $fullname }, file: $file) {\n      id\n      fullname\n      avatarUrl\n    }\n  }\n": types.UpdateUserDocument,
+    "\n  mutation RegisterUser($fullname: String!, $email: String!, $password: String!) {\n    register(registerInput: { fullname: $fullname, email: $email, password: $password }) {\n      accessToken\n      refreshToken\n      success\n      message\n      user {\n        id\n        fullname\n        email\n        avatarUrl\n        createdAt\n        updatedAt\n      }\n    }\n  }\n": types.RegisterUserDocument,
+    "\n  mutation UpdateUser($fullname: String!) {\n    updateUser(input: { fullname: $fullname }) {\n      id\n      fullname\n      avatarUrl\n    }\n  }\n": types.UpdateUserDocument,
+    "\n  query GetCurrentUser {\n    getCurrentUser {\n      success\n      user {\n        id\n        fullname\n        email\n        avatarUrl\n        createdAt\n        updatedAt\n      }\n    }\n  }\n": types.GetCurrentUserDocument,
 };
 
 /**
@@ -45,11 +46,15 @@ export function graphql(source: "\n  mutation LogoutUser {\n    logout\n  }\n"):
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation RegisterUser(\n    $fullname: String!\n    $email: String!\n    $password: String!\n    $confirmPassword: String!\n  ) {\n    register(registerInput: { fullname: $fullname, email: $email, password: $password }) {\n      accessToken\n      refreshToken\n      success\n      message\n      user {\n        id\n        fullname\n        email\n        avatarUrl\n        createdAt\n        updatedAt\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation RegisterUser(\n    $fullname: String!\n    $email: String!\n    $password: String!\n    $confirmPassword: String!\n  ) {\n    register(registerInput: { fullname: $fullname, email: $email, password: $password }) {\n      accessToken\n      refreshToken\n      success\n      message\n      user {\n        id\n        fullname\n        email\n        avatarUrl\n        createdAt\n        updatedAt\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  mutation RegisterUser($fullname: String!, $email: String!, $password: String!) {\n    register(registerInput: { fullname: $fullname, email: $email, password: $password }) {\n      accessToken\n      refreshToken\n      success\n      message\n      user {\n        id\n        fullname\n        email\n        avatarUrl\n        createdAt\n        updatedAt\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation RegisterUser($fullname: String!, $email: String!, $password: String!) {\n    register(registerInput: { fullname: $fullname, email: $email, password: $password }) {\n      accessToken\n      refreshToken\n      success\n      message\n      user {\n        id\n        fullname\n        email\n        avatarUrl\n        createdAt\n        updatedAt\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation UpdateUser($fullname: String!, $file: Upload) {\n    updateUser(input: { fullname: $fullname }, file: $file) {\n      id\n      fullname\n      avatarUrl\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateUser($fullname: String!, $file: Upload) {\n    updateUser(input: { fullname: $fullname }, file: $file) {\n      id\n      fullname\n      avatarUrl\n    }\n  }\n"];
+export function graphql(source: "\n  mutation UpdateUser($fullname: String!) {\n    updateUser(input: { fullname: $fullname }) {\n      id\n      fullname\n      avatarUrl\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateUser($fullname: String!) {\n    updateUser(input: { fullname: $fullname }) {\n      id\n      fullname\n      avatarUrl\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetCurrentUser {\n    getCurrentUser {\n      success\n      user {\n        id\n        fullname\n        email\n        avatarUrl\n        createdAt\n        updatedAt\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetCurrentUser {\n    getCurrentUser {\n      success\n      user {\n        id\n        fullname\n        email\n        avatarUrl\n        createdAt\n        updatedAt\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
