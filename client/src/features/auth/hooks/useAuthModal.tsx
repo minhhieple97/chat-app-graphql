@@ -45,6 +45,7 @@ export const useAuthModal = () => {
   const handleAuthSuccess = async (data: LoginResponse) => {
     if (data.success) {
       try {
+        console.log('refetching user');
         await refetchUser();
         toggleLoginModal(false);
         setValidationErrors({});

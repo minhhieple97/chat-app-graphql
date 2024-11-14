@@ -9,7 +9,7 @@ export const useAuthCheck = () => {
   const { resetUser } = useUserStore();
 
   const { refetch } = useQuery<{ getCurrentUser: CurrentUserResponse }>(GET_CURRENT_USER, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'no-cache',
     onError: () => {
       resetUser();
     },
@@ -19,6 +19,7 @@ export const useAuthCheck = () => {
     const checkAuth = async () => {
       try {
         const { data } = await refetch();
+        console.log({ data });
         if (!data?.getCurrentUser.success) {
           resetUser();
         }

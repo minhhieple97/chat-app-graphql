@@ -1,11 +1,11 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AuthForm } from './AuthForm';
 import { useGeneralStore } from '@/stores/generalStore';
-import { useAuthModal } from '../hooks/useAuthModal';
+import { useAuth } from '../hooks/useAuth';
 
 export const AuthModal = () => {
   const { isLoginModalOpen, toggleLoginModal } = useGeneralStore();
-  const { mode, setMode, validationErrors, isLoading, handleSubmit } = useAuthModal();
+  const { mode } = useAuth();
 
   return (
     <Dialog open={isLoginModalOpen} onOpenChange={(open) => toggleLoginModal(open)}>
@@ -13,13 +13,7 @@ export const AuthModal = () => {
         <DialogHeader>
           <DialogTitle>{mode === 'login' ? 'Login to Chat App' : 'Create an account'}</DialogTitle>
         </DialogHeader>
-        <AuthForm
-          mode={mode}
-          onSubmit={handleSubmit}
-          onModeChange={setMode}
-          isLoading={isLoading}
-          errors={validationErrors}
-        />
+        <AuthForm />
       </DialogContent>
     </Dialog>
   );

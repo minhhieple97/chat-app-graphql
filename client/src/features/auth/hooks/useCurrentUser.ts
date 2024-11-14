@@ -7,13 +7,14 @@ export const useCurrentUser = () => {
   const { setUser } = useUserStore();
 
   const [getCurrentUser] = useLazyQuery<{ getCurrentUser: CurrentUserResponse }>(GET_CURRENT_USER, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'no-cache',
   });
 
   const refetchUser = async () => {
     try {
       console.log('refetching user');
       const { data } = await getCurrentUser();
+      console.log({ data });
       if (data?.getCurrentUser.success) {
         setUser(data.getCurrentUser.user);
       }

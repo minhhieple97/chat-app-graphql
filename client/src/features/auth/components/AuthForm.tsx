@@ -1,29 +1,41 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { AuthFormProps } from '../types';
-import { useAuthForm } from '../hooks/useAuthForm';
+import { AvatarUpload } from './AvatarUpload';
+import { useAuth } from '../hooks/useAuth';
 
-export const AuthForm = ({ mode, onSubmit, onModeChange, isLoading, errors }: AuthFormProps) => {
-  const { formData, handleChange } = useAuthForm();
+export const AuthForm = () => {
+  const {
+    mode,
+    formData,
+    isLoading,
+    handleChange,
+    handleAvatarChange,
+    handleSubmit: onSubmit,
+    validationErrors: errors,
+    setMode,
+  } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit();
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {mode === 'register' && (
-        <div className="space-y-2">
-          <Input
-            placeholder="Full Name"
-            name="fullname"
-            value={formData.fullname}
-            onChange={handleChange}
-            required
-          />
-          {errors.fullname && <p className="text-sm text-destructive">{errors.fullname}</p>}
-        </div>
+        <>
+          <AvatarUpload onChange={handleAvatarChange} error={errors.avatar} />
+          <div className="space-y-2">
+            <Input
+              placeholder="Full Name"
+              name="fullname"
+              value={formData.fullname}
+              onChange={handleChange}
+              required
+            />
+            {errors.fullname && <p className="text-sm text-destructive">{errors.fullname}</p>}
+          </div>
+        </>
       )}
       <div className="space-y-2">
         <Input
@@ -71,7 +83,7 @@ export const AuthForm = ({ mode, onSubmit, onModeChange, isLoading, errors }: Au
           type="button"
           variant="link"
           className="p-0"
-          onClick={() => onModeChange(mode === 'login' ? 'register' : 'login')}
+          onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
         >
           {mode === 'login' ? 'Register' : 'Login'}
         </Button>
