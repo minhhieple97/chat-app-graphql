@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
+import { json, urlencoded } from 'express';
 
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 
@@ -37,6 +38,8 @@ async function bootstrap() {
       },
     }),
   );
+  app.use(json({ limit: '5mb' }));
+  app.use(urlencoded({ extended: true, limit: '5mb' }));
   await app.listen(3000);
 }
 bootstrap();

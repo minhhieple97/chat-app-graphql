@@ -224,8 +224,6 @@ export class UserService {
       allowedMimeTypes: ['image/jpeg', 'image/png', 'image/gif'],
     });
 
-    console.log({ avatarUrl });
-
     return this.prisma.user.update({
       where: { id: userId },
       data: { avatarUrl },
