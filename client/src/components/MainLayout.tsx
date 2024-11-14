@@ -4,8 +4,11 @@ import { useGeneralStore } from '@/stores/generalStore';
 import { Sidebar } from './Sidebar';
 import { AuthModal } from '@/features/auth/AuthModal';
 import { Button } from './ui/button';
+import { useAuthCheck } from '@/features/auth/useAuthCheck';
 
 export const MainLayout = ({ children }: { children: React.ReactNode }) => {
+  useAuthCheck();
+
   const { id } = useUserStore();
   const { toggleLoginModal } = useGeneralStore();
 

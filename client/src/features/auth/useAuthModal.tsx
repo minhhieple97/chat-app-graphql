@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useMutation, ApolloError } from '@apollo/client';
 import { LOGIN_USER } from '@/graphql/mutations/Login';
 import { REGISTER_USER } from '@/graphql/mutations/Register';
-import { LoginResponse, User } from '@/gql/graphql';
+import { LoginResponse } from '@/gql/graphql';
 import { useGeneralStore } from '@/stores/generalStore';
-import { useUserStore } from '@/stores/userStore';
 import { toast } from 'sonner';
 import { AuthFormData, AuthMode } from './types';
+import { useCurrentUser } from './useCurrentUser';
 
 interface ValidationError {
   extensions?: {
@@ -17,7 +17,7 @@ interface ValidationError {
 
 export const useAuthModal = () => {
   const { toggleLoginModal } = useGeneralStore();
-  const { setUser } = useUserStore();
+  const { refetchUser } = useCurrentUser();
   const [mode, setMode] = useState<AuthMode>('login');
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
@@ -42,35 +42,31 @@ export const useAuthModal = () => {
     }
   };
 
-  const handleAuthSuccess = (user: User) => {
-    setUser(user);
-    toggleLoginModal(false);
-    setValidationErrors({});
+  const handleAuthSuccess = async (data: LoginResponse) => {
+    if (data.success) {
+      try {
+        await refetchUser();
+        toggleLoginModal(false);
+        setValidationErrors({});
+        toast.success(mode === 'login' ? 'Logged in successfully' : 'Registration successful');
+      } catch (error) {
+        console.error('Error refetching user after auth:', error);
+        toast.error('Authentication successful but failed to load user data');
+      }
+    } else {
+      toast.error(data.message || `${mode === 'login' ? 'Login' : 'Registration'} failed`);
+    }
   };
 
   const [login, { loading: isLoginLoading }] = useMutation<{ login: LoginResponse }>(LOGIN_USER, {
-    onCompleted: (data) => {
-      if (data.login.success) {
-        handleAuthSuccess(data.login.user);
-        toast.success('Logged in successfully');
-      } else {
-        toast.error(data.login.message || 'Login failed');
-      }
-    },
+    onCompleted: (data) => handleAuthSuccess(data.login),
     onError: handleGraphQLError,
   });
 
   const [register, { loading: isRegisterLoading }] = useMutation<{ register: LoginResponse }>(
     REGISTER_USER,
     {
-      onCompleted: (data) => {
-        if (data.register.success) {
-          handleAuthSuccess(data.register.user);
-          toast.success('Registration successful');
-        } else {
-          toast.error(data.register.message || 'Registration failed');
-        }
-      },
+      onCompleted: (data) => handleAuthSuccess(data.register),
       onError: handleGraphQLError,
     },
   );

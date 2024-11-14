@@ -10,6 +10,7 @@ import { LoginDto, RegisterDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { TokenService } from 'src/token/token.service';
+import { ACCESS_TOKEN_COOKIE_EXPIRES_IN } from 'src/config/constants';
 @Injectable()
 export class AuthService {
   constructor(
@@ -28,6 +29,7 @@ export class AuthService {
     res.cookie('access_token', newAccessToken, { httpOnly: true });
     return {
       accessToken: newAccessToken,
+      maxAge: ACCESS_TOKEN_COOKIE_EXPIRES_IN,
     };
   }
 

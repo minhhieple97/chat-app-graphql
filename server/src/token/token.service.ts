@@ -10,6 +10,12 @@ import { User } from '@prisma/client';
 import { verify } from 'jsonwebtoken';
 import { UserTokenPayload } from 'src/user/types';
 import { PrismaService } from 'src/prisma/prisma.service';
+import {
+  ACCESS_TOKEN_COOKIE_EXPIRES_IN,
+  ACCESS_TOKEN_EXPIRES_IN,
+  REFRESH_TOKEN_COOKIE_EXPIRES_IN,
+  REFRESH_TOKEN_EXPIRES_IN,
+} from 'src/config/constants';
 
 @Injectable()
 export class TokenService {
@@ -55,16 +61,23 @@ export class TokenService {
       { ...payload },
       {
         secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
+        expiresIn: ACCESS_TOKEN_EXPIRES_IN,
       },
     );
 
     const refreshToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
-      expiresIn: '7d',
+      expiresIn: REFRESH_TOKEN_EXPIRES_IN,
     });
 
-    response.cookie('access_token', accessToken, { httpOnly: true });
-    response.cookie('refresh_token', refreshToken, { httpOnly: true });
+    response.cookie('access_token', accessToken, {
+      httpOnly: true,
+      maxAge: ACCESS_TOKEN_COOKIE_EXPIRES_IN,
+    });
+    response.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      maxAge: REFRESH_TOKEN_COOKIE_EXPIRES_IN,
+    });
 
     return { accessToken, refreshToken };
   }
