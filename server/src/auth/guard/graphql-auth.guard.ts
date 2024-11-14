@@ -7,6 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
+import { UserTokenPayload } from 'src/user/types';
 
 @Injectable()
 export class GraphqlAuthGuard implements CanActivate {
@@ -19,7 +20,6 @@ export class GraphqlAuthGuard implements CanActivate {
     const gqlCtx = context.getArgByIndex(2);
     const request: Request = gqlCtx.req;
     const token = this.extractTokenFromCookie(request);
-
     if (!token) {
       throw new UnauthorizedException();
     }
@@ -28,7 +28,7 @@ export class GraphqlAuthGuard implements CanActivate {
         secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
       });
 
-      request['user'] = payload;
+      request['user'] = payload as UserTokenPayload;
     } catch (err) {
       throw new UnauthorizedException();
     }

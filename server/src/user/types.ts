@@ -1,4 +1,4 @@
-import { Field, ObjectType, ID } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class User {
@@ -44,3 +44,10 @@ export class UsersResponse {
   @Field(() => Boolean)
   success: boolean;
 }
+
+export type UserTokenPayload = {
+  username: string;
+  sub: number;
+  exp: number;
+  iat: number;
+};

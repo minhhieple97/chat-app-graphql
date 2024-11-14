@@ -22,18 +22,13 @@ export const useAuthModal = () => {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   const handleGraphQLError = (error: ApolloError) => {
-    console.log(error);
     const firstError = error.graphQLErrors[0] as ValidationError;
-    console.log({ firstError });
     if (firstError?.extensions?.code === 'VALIDATION_ERROR') {
-      console.log('validation error');
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { code, stacktrace, ...validationFields } = firstError.extensions;
-      console.log({ validationFields, code });
       setValidationErrors(validationFields);
 
       if (validationFields.invalidCredentials) {
-        console.log('invalid credentials');
         toast.error(validationFields.invalidCredentials);
         return;
       }

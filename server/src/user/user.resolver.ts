@@ -4,7 +4,6 @@ import { UserService } from './user.service';
 import { User, UserResponse, UsersResponse } from './types';
 import { UpdateUserInput } from './dto';
 import { GraphqlAuthGuard } from '../auth/guard/graphql-auth.guard';
-import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 @Resolver(() => User)
 @UseGuards(GraphqlAuthGuard)
 export class UserResolver {
@@ -28,13 +27,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  async updateUser(
-    @Context() context,
-    @Args('input') input: UpdateUserInput,
-    @Args('file', { type: () => GraphQLUpload, nullable: true })
-    file: GraphQLUpload.FileUpload,
-  ) {
-    console.log(file);
+  async updateUser(@Context() context, @Args('input') input: UpdateUserInput) {
     const userId = context.req.user.sub;
     return this.userService.update(userId, input);
   }

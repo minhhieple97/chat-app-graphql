@@ -56,7 +56,6 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
       return new Observable((observer) => {
         refreshToken(client)
           .then((token) => {
-            console.log('token', token);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             operation.setContext((previousContext: any) => ({
               headers: {
@@ -72,7 +71,6 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
     }
 
     if (err.message === 'Refresh token not found') {
-      console.log('refresh token not found!');
       useUserStore.setState({
         id: undefined,
         fullname: '',

@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type CurrentUserResponse {
+  message: String
+  success: Boolean!
+  user: User!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -27,10 +33,11 @@ type Mutation {
   refreshToken: String!
   register(registerInput: RegisterDto!): RegisterResponse!
   updateAvatar(base64Image: String!): User!
-  updateUser(file: Upload, input: UpdateUserInput!): User!
+  updateUser(input: UpdateUserInput!): User!
 }
 
 type Query {
+  getCurrentUser: CurrentUserResponse!
   getUser: UserResponse!
   getUsersOfChatroom(chatroomId: Float!): [User!]!
   searchUsers(fullname: String!): UsersResponse!
@@ -55,9 +62,6 @@ input UpdateUserInput {
   email: String
   fullname: String
 }
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
 
 type User {
   avatarUrl: String

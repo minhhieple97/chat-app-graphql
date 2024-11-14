@@ -1,10 +1,12 @@
-import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Context, Query } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { LoginResponse, RegisterResponse } from './types';
+import { LoginResponse, RegisterResponse, CurrentUserResponse } from './types';
 import { LoginDto, RegisterDto } from './dto';
-import { BadRequestException, UseFilters } from '@nestjs/common';
+import { BadRequestException, UseFilters, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { GraphQLErrorFilter } from 'src/common/filters/custom-exception.filter';
+import { GraphqlAuthGuard } from './guard/graphql-auth.guard';
+import { UserTokenPayload } from '../user/types';
 
 @UseFilters(GraphQLErrorFilter)
 @Resolver()
@@ -47,5 +49,16 @@ export class AuthResolver {
     } catch (error) {
       throw new BadRequestException(error.message);
     }
+  }
+
+  @Query(() => CurrentUserResponse)
+  @UseGuards(GraphqlAuthGuard)
+  async getCurrentUser(@Context() context: { req: Request }) {
+    const user = context.req['user'] as UserTokenPayload;
+    const currentUser = await this.authService.getCurrentUser(user.sub);
+    return {
+      user: currentUser,
+      success: true,
+    };
   }
 }
