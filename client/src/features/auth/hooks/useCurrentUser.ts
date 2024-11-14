@@ -8,22 +8,14 @@ export const useCurrentUser = () => {
 
   const [getCurrentUser] = useLazyQuery<{ getCurrentUser: CurrentUserResponse }>(GET_CURRENT_USER, {
     fetchPolicy: 'no-cache',
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (response) => {
+      const data = response.getCurrentUser;
+      if (data.success) {
+        setUser(data.user);
+      }
+    },
   });
 
-  const refetchUser = async () => {
-    try {
-      console.log('refetching user');
-      const { data } = await getCurrentUser();
-      console.log({ data });
-      if (data?.getCurrentUser.success) {
-        setUser(data.getCurrentUser.user);
-      }
-      return data;
-    } catch (error) {
-      console.error('Error refetching user:', error);
-      throw error;
-    }
-  };
-
-  return { refetchUser };
+  return { getCurrentUser };
 };

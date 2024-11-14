@@ -26,7 +26,7 @@ type AuthState = {
 
 export const useAuth = () => {
   const { toggleLoginModal } = useGeneralStore();
-  const { refetchUser } = useCurrentUser();
+  const { getCurrentUser } = useCurrentUser();
 
   // Combined state
   const [state, setState] = useState<AuthState>({
@@ -121,12 +121,10 @@ export const useAuth = () => {
     }
 
     try {
-      await refetchUser();
-
       if (state.mode === 'register' && state.formData.avatar) {
         await uploadAvatar();
       }
-
+      await getCurrentUser();
       toggleLoginModal(false);
       setState((prev) => ({ ...prev, validationErrors: {} }));
       resetForm();

@@ -6,38 +6,30 @@ import { CurrentUserResponse } from '@/gql/graphql';
 const INTERVAL_TIME = 30000;
 export const useAuthCheck = () => {
   const intervalRef = useRef<NodeJS.Timeout>();
-  const { resetUser } = useUserStore();
+  const { resetUser, setUser } = useUserStore();
 
   const { refetch } = useQuery<{ getCurrentUser: CurrentUserResponse }>(GET_CURRENT_USER, {
     fetchPolicy: 'no-cache',
+    notifyOnNetworkStatusChange: true,
     onError: () => {
       resetUser();
+    },
+    onCompleted: (response) => {
+      const data = response.getCurrentUser;
+      if (!data.success) {
+        resetUser();
+      }
+      setUser(data.user);
     },
   });
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const { data } = await refetch();
-        console.log({ data });
-        if (!data?.getCurrentUser.success) {
-          resetUser();
-        }
-      } catch {
-        resetUser();
-      }
-    };
-
-    // Initial check
-    checkAuth();
-
-    // Set up interval
-    intervalRef.current = setInterval(checkAuth, INTERVAL_TIME); // 30 seconds
+    intervalRef.current = setInterval(refetch, INTERVAL_TIME); // 30 seconds
 
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
-  }, [refetch, resetUser]);
+  }, [refetch]);
 };
