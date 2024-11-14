@@ -5,7 +5,7 @@ import { REGISTER_USER } from '@/graphql/mutations/Register';
 import { LoginResponse } from '@/gql/graphql';
 import { useGeneralStore } from '@/stores/generalStore';
 import { toast } from 'sonner';
-import { AuthFormData, AuthMode } from './types';
+import { AuthFormData, AuthMode } from '../types';
 import { useCurrentUser } from './useCurrentUser';
 
 interface ValidationError {

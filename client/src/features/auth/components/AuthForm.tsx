@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { AuthFormProps } from './types';
-import { useAuthForm } from './useAuthForm';
+import { AuthFormProps } from '../types';
+import { useAuthForm } from '../hooks/useAuthForm';
 
 export const AuthForm = ({ mode, onSubmit, onModeChange, isLoading, errors }: AuthFormProps) => {
   const { formData, handleChange } = useAuthForm();

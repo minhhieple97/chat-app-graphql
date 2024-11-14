@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AuthForm } from './AuthForm';
 import { useGeneralStore } from '@/stores/generalStore';
-import { useAuthModal } from './useAuthModal';
+import { useAuthModal } from '../hooks/useAuthModal';
 
 export const AuthModal = () => {
   const { isLoginModalOpen, toggleLoginModal } = useGeneralStore();

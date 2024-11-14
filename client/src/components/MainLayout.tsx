@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 import { useUserStore } from '@/stores/userStore';
 import { useGeneralStore } from '@/stores/generalStore';
 import { Sidebar } from './Sidebar';
-import { AuthModal } from '@/features/auth/AuthModal';
+import { AuthModal } from '@/features/auth/components/AuthModal';
 import { Button } from './ui/button';
-import { useAuthCheck } from '@/features/auth/useAuthCheck';
+import { useAuthCheck } from '@/features/auth/hooks/useAuthCheck';
 
 export const MainLayout = ({ children }: { children: React.ReactNode }) => {
   useAuthCheck();
