@@ -26,10 +26,12 @@ export class AuthService {
 
     const newAccessToken = await this.tokenService.refreshToken(refreshToken);
 
-    res.cookie('access_token', newAccessToken, { httpOnly: true });
+    res.cookie('access_token', newAccessToken, {
+      httpOnly: true,
+      maxAge: ACCESS_TOKEN_COOKIE_EXPIRES_IN,
+    });
     return {
       accessToken: newAccessToken,
-      maxAge: ACCESS_TOKEN_COOKIE_EXPIRES_IN,
     };
   }
 
