@@ -20,6 +20,7 @@ async function bootstrap() {
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
   });
   app.use(cookieParser());
+  app.setGlobalPrefix('api/v1');
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

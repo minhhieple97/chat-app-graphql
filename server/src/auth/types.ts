@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { User } from '../user/types';
-
+import { User, UserTokenPayload } from '../user/types';
+import { Request } from 'express';
 @ObjectType()
 export class AuthResponse {
   @Field(() => String)
@@ -48,3 +48,5 @@ export class RefreshTokenResponse {
   @Field(() => String)
   accessToken: string;
 }
+
+export type RequestWithUser = Request & { user: UserTokenPayload };

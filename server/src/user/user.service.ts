@@ -10,6 +10,7 @@ import { User } from '@prisma/client';
 import { MAX_IMAGE_SIZE } from 'src/config/constants';
 import { AVATAR_FOLDER } from 'src/config/constants';
 import * as Joi from 'joi';
+import { FileUploadService } from 'src/common/services/file-upload.service';
 
 type UserBasicInfo = Pick<
   User,
@@ -18,7 +19,11 @@ type UserBasicInfo = Pick<
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService, private awsService: AwsService) {}
+  constructor(
+    private prisma: PrismaService,
+    private awsService: AwsService,
+    private fileUploadService: FileUploadService,
+  ) {}
 
   async findById(id: number): Promise<User> {
     const user = await this.prisma.user.findUnique({
@@ -206,5 +211,24 @@ export class UserService {
     }
 
     return user;
+  }
+
+  async updateAvatarFile(
+    userId: number,
+    file: Express.Multer.File,
+  ): Promise<User> {
+    const avatarUrl = await this.fileUploadService.uploadFile({
+      file,
+      folder: AVATAR_FOLDER,
+      maxSizeInBytes: MAX_IMAGE_SIZE,
+      allowedMimeTypes: ['image/jpeg', 'image/png', 'image/gif'],
+    });
+
+    console.log({ avatarUrl });
+
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { avatarUrl },
+    });
   }
 }

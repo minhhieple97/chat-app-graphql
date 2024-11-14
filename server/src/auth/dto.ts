@@ -1,6 +1,7 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { IsEmail, IsNotEmpty, MinLength, IsString } from 'class-validator';
-
+import { IsOptional } from 'class-validator';
+import { Express } from 'express';
 @InputType()
 export class RegisterDto {
   @Field()
@@ -29,4 +30,9 @@ export class LoginDto {
   @Field()
   @IsNotEmpty({ message: 'Password is required.' })
   password: string;
+}
+
+export class UploadAvatarDto {
+  @IsOptional()
+  file: Express.Multer.File;
 }

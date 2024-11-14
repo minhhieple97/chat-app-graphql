@@ -6,10 +6,13 @@ import { CurrentUserResponse } from '@/gql/graphql';
 export const useCurrentUser = () => {
   const { setUser } = useUserStore();
 
-  const [getCurrentUser] = useLazyQuery<{ getCurrentUser: CurrentUserResponse }>(GET_CURRENT_USER);
+  const [getCurrentUser] = useLazyQuery<{ getCurrentUser: CurrentUserResponse }>(GET_CURRENT_USER, {
+    fetchPolicy: 'network-only',
+  });
 
   const refetchUser = async () => {
     try {
+      console.log('refetching user');
       const { data } = await getCurrentUser();
       if (data?.getCurrentUser.success) {
         setUser(data.getCurrentUser.user);
