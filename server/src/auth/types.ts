@@ -3,9 +3,6 @@ import { User } from '../user/types';
 
 @ObjectType()
 export class AuthResponse {
-  @Field(() => User)
-  user: User;
-
   @Field(() => String)
   accessToken: string;
 
@@ -44,4 +41,10 @@ export class CurrentUserResponse {
 
   @Field(() => String, { nullable: true })
   message?: string;
+}
+
+@ObjectType()
+export class RefreshTokenResponse {
+  @Field(() => String)
+  accessToken: string;
 }

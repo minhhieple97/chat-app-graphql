@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { User } from '@prisma/client';
@@ -18,18 +19,16 @@ export class AuthService {
 
   async refreshToken(req: Request, res: Response) {
     const refreshToken = req.cookies['refresh_token'];
-    const newAccessToken = await this.tokenService.refreshToken(refreshToken);
-    const payload = await this.tokenService.validateToken(newAccessToken);
-    const userExists = await this.prisma.user.findUnique({
-      where: { id: payload.sub },
-    });
-
-    if (!userExists) {
-      throw new BadRequestException('User no longer exists');
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token not found');
     }
 
+    const newAccessToken = await this.tokenService.refreshToken(refreshToken);
+
     res.cookie('access_token', newAccessToken, { httpOnly: true });
-    return newAccessToken;
+    return {
+      accessToken: newAccessToken,
+    };
   }
 
   async login(loginDto: LoginDto, response: Response) {
@@ -39,11 +38,7 @@ export class AuthService {
         invalidCredentials: 'Invalid credentials',
       });
     }
-    const { accessToken, refreshToken } = await this.tokenService.issueTokens(
-      user,
-      response,
-    );
-    return { user, accessToken, refreshToken };
+    return this.tokenService.issueTokens(user, response);
   }
 
   async register(registerDto: RegisterDto, response: Response) {
@@ -61,11 +56,7 @@ export class AuthService {
         email: registerDto.email,
       },
     });
-    const { accessToken, refreshToken } = await this.tokenService.issueTokens(
-      user,
-      response,
-    );
-    return { user, accessToken, refreshToken };
+    return this.tokenService.issueTokens(user, response);
   }
 
   async logout(response: Response) {

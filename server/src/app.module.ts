@@ -51,7 +51,7 @@ const pubSub = new RedisPubSub({
             if (!token) {
               throw new Error('Token not provided');
             }
-            const user = tokenService.validateToken(token);
+            const user = tokenService.validateRefreshToken(token);
             if (!user) {
               throw new Error('Invalid token');
             }

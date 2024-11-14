@@ -1,28 +1,45 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { User } from '@prisma/client';
 import { verify } from 'jsonwebtoken';
 import { UserTokenPayload } from 'src/user/types';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class TokenService {
   constructor(
     private configService: ConfigService,
     private jwtService: JwtService,
+    private prisma: PrismaService,
   ) {}
 
   extractToken(connectionParams: any): string | null {
     return connectionParams?.token || null;
   }
 
-  validateToken(token: string): any {
+  validateRefreshToken(token: string): any {
     const refreshTokenSecret = this.configService.get<string>(
       'REFRESH_TOKEN_SECRET',
     );
     try {
       return verify(token, refreshTokenSecret);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  validateAccessToken(token: string): any {
+    const accessTokenSecret = this.configService.get<string>(
+      'ACCESS_TOKEN_SECRET',
+    );
+    try {
+      return verify(token, accessTokenSecret);
     } catch (error) {
       return null;
     }
@@ -53,20 +70,23 @@ export class TokenService {
   }
 
   async refreshToken(refreshToken: string): Promise<string> {
-    if (!refreshToken) {
-      throw new UnauthorizedException('Refresh token not found');
-    }
-
     try {
       const payload = this.jwtService.verify(refreshToken, {
         secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
       });
+      if (!payload) {
+        throw new UnauthorizedException('Invalid or expired refresh token');
+      }
+      const userExists = await this.prisma.user.findUnique({
+        where: { id: payload.sub },
+      });
 
-      const expiresIn = 15000;
-      const expiration = Math.floor(Date.now() / 1000) + expiresIn;
+      if (!userExists) {
+        throw new NotFoundException('User no longer exists');
+      }
 
       return this.jwtService.sign(
-        { ...payload, exp: expiration },
+        { username: userExists.fullname, sub: userExists.id },
         {
           secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
         },

@@ -1,6 +1,11 @@
 import { Resolver, Mutation, Args, Context, Query } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { LoginResponse, RegisterResponse, CurrentUserResponse } from './types';
+import {
+  LoginResponse,
+  RegisterResponse,
+  CurrentUserResponse,
+  RefreshTokenResponse,
+} from './types';
 import { LoginDto, RegisterDto } from './dto';
 import { BadRequestException, UseFilters, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
@@ -18,11 +23,11 @@ export class AuthResolver {
     @Args('registerInput') registerDto: RegisterDto,
     @Context() context: { res: Response },
   ) {
-    const { user, refreshToken, accessToken } = await this.authService.register(
+    const { refreshToken, accessToken } = await this.authService.register(
       registerDto,
       context.res,
     );
-    return { user, refreshToken, accessToken, success: true };
+    return { refreshToken, accessToken, success: true };
   }
 
   @Mutation(() => LoginResponse)
@@ -30,11 +35,11 @@ export class AuthResolver {
     @Args('loginInput') loginDto: LoginDto,
     @Context() context: { res: Response },
   ) {
-    const { user, refreshToken, accessToken } = await this.authService.login(
+    const { refreshToken, accessToken } = await this.authService.login(
       loginDto,
       context.res,
     );
-    return { user, refreshToken, accessToken, success: true };
+    return { refreshToken, accessToken, success: true };
   }
 
   @Mutation(() => String)
@@ -42,7 +47,7 @@ export class AuthResolver {
     return this.authService.logout(context.res);
   }
 
-  @Mutation(() => String)
+  @Mutation(() => RefreshTokenResponse)
   async refreshToken(@Context() context: { req: Request; res: Response }) {
     try {
       return this.authService.refreshToken(context.req, context.res);

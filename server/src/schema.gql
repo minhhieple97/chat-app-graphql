@@ -23,14 +23,13 @@ type LoginResponse {
   message: String
   refreshToken: String
   success: Boolean!
-  user: User!
 }
 
 type Mutation {
   deleteUser: Boolean!
   login(loginInput: LoginDto!): LoginResponse!
   logout: String!
-  refreshToken: String!
+  refreshToken: RefreshTokenResponse!
   register(registerInput: RegisterDto!): RegisterResponse!
   updateAvatar(base64Image: String!): User!
   updateUser(input: UpdateUserInput!): User!
@@ -41,6 +40,10 @@ type Query {
   getUser: UserResponse!
   getUsersOfChatroom(chatroomId: Float!): [User!]!
   searchUsers(fullname: String!): UsersResponse!
+}
+
+type RefreshTokenResponse {
+  accessToken: String!
 }
 
 input RegisterDto {
@@ -54,7 +57,6 @@ type RegisterResponse {
   message: String
   refreshToken: String
   success: Boolean!
-  user: User!
 }
 
 input UpdateUserInput {

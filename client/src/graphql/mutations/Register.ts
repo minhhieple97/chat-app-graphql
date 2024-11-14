@@ -7,14 +7,6 @@ export const REGISTER_USER = gql`
       refreshToken
       success
       message
-      user {
-        id
-        fullname
-        email
-        avatarUrl
-        createdAt
-        updatedAt
-      }
     }
   }
 `;

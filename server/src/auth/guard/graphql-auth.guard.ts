@@ -4,17 +4,13 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { UserTokenPayload } from 'src/user/types';
+import { TokenService } from 'src/token/token.service';
 
 @Injectable()
 export class GraphqlAuthGuard implements CanActivate {
-  constructor(
-    private jwtService: JwtService,
-    private configService: ConfigService,
-  ) {}
+  constructor(private readonly tokenService: TokenService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const gqlCtx = context.getArgByIndex(2);
@@ -24,10 +20,10 @@ export class GraphqlAuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
-      });
-
+      const payload = await this.tokenService.validateAccessToken(token);
+      if (!payload) {
+        throw new UnauthorizedException();
+      }
       request['user'] = payload as UserTokenPayload;
     } catch (err) {
       throw new UnauthorizedException();
