@@ -10,7 +10,6 @@ export const SEARCH_USERS = gql`
         avatarUrl
         createdAt
       }
-      total
       success
     }
   }

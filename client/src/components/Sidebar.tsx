@@ -1,15 +1,17 @@
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { LogOut } from 'lucide-react';
+import { LogOut, Plus } from 'lucide-react';
 import { useMutation } from '@apollo/client';
 import { useUserStore } from '@/stores/userStore';
 import { LOGOUT_USER } from '@/graphql/mutations/Logout';
-import { ChatItem } from '@/features/chat/ChatItem';
 import { toast } from 'sonner';
+import { useGeneralStore } from '@/stores/generalStore';
+import { CreateChatroomModal } from '@/features/chat/CreateChatroomModal';
+import { ContactList } from '@/features/chat/ContactList';
 
 export const Sidebar = () => {
   const { fullname, avatarUrl, resetUser } = useUserStore();
+  const { toggleCreateRoomModal } = useGeneralStore();
   const [logout] = useMutation(LOGOUT_USER, {
     onCompleted: () => {
       resetUser();
@@ -46,16 +48,17 @@ export const Sidebar = () => {
             <p className="text-sm text-muted-foreground">{fullname}</p>
           </div>
         </div>
-        <Button variant="ghost" size="icon" onClick={handleLogout} title="Logout">
-          <LogOut className="h-4 w-4" />
-        </Button>
-      </div>
-      <ScrollArea className="flex-1">
-        <div className="p-2 space-y-2">
-          <ChatItem name="John Doe" lastMessage="Hello there!" timestamp="2:30 PM" />
-          {/* Add more ChatItems as needed */}
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={handleLogout} title="Logout">
+            <LogOut className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="icon" onClick={toggleCreateRoomModal} title="Create Room">
+            <Plus className="h-4 w-4" />
+          </Button>
         </div>
-      </ScrollArea>
+      </div>
+      <ContactList />
+      <CreateChatroomModal />
     </div>
   );
 };

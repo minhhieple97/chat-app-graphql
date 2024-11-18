@@ -4,22 +4,16 @@ import { User } from 'src/user/types';
 @ObjectType()
 export class Chatroom {
   @Field(() => ID, { nullable: true })
-  id?: string;
+  id: string;
 
   @Field({ nullable: true })
-  name?: string;
+  name: string;
 
   @Field({ nullable: true })
-  createdAt?: Date;
+  createdAt: Date;
 
   @Field({ nullable: true })
   updatedAt?: Date;
-
-  @Field(() => [User], { nullable: true }) // array of user IDs
-  users?: User[];
-
-  @Field(() => [Message], { nullable: true }) // array of message IDs
-  messages?: Message[];
 }
 
 @ObjectType()

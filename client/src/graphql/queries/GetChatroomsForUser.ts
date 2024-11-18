@@ -5,21 +5,6 @@ export const GET_CHATROOMS_FOR_USER = gql`
     getChatroomsForUser(userId: $userId) {
       id
       name
-      messages {
-        id
-        content
-        createdAt
-        user {
-          id
-          fullname
-        }
-      }
-      users {
-        avatarUrl
-        id
-        fullname
-        email
-      }
     }
   }
 `;

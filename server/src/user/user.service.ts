@@ -124,10 +124,7 @@ export class UserService {
     return uploadResult;
   }
 
-  async searchUsers(
-    searchTerm: string,
-    userId: number,
-  ): Promise<UserBasicInfo[]> {
+  searchUsers(searchTerm: string, userId: number): Promise<UserBasicInfo[]> {
     return this.prisma.user.findMany({
       where: {
         OR: [

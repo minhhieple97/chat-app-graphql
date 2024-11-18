@@ -38,9 +38,6 @@ export class UsersResponse {
   @Field(() => [User])
   users: User[];
 
-  @Field(() => Number)
-  total: number;
-
   @Field(() => Boolean)
   success: boolean;
 }

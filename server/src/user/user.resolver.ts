@@ -21,7 +21,8 @@ export class UserResolver {
     @Context() context,
   ) {
     const userId = context.req.user.sub;
-    return this.userService.searchUsers(searchTerm, userId);
+    const users = await this.userService.searchUsers(searchTerm, userId);
+    return { users, success: true };
   }
 
   @Query(() => [User])

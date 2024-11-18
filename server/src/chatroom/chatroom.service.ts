@@ -64,7 +64,7 @@ export class ChatroomService {
     });
   }
   async getChatroomsForUser(userId: number) {
-    return this.prisma.chatroom.findMany({
+    const chatrooms = await this.prisma.chatroom.findMany({
       where: {
         users: {
           some: {
@@ -72,21 +72,8 @@ export class ChatroomService {
           },
         },
       },
-      include: {
-        users: {
-          orderBy: {
-            createdAt: 'desc',
-          },
-        }, // Eager loading users
-
-        messages: {
-          take: 1,
-          orderBy: {
-            createdAt: 'desc',
-          },
-        },
-      },
     });
+    return chatrooms;
   }
   async sendMessage(
     chatroomId: number,

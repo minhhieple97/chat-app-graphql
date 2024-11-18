@@ -16,12 +16,6 @@ export const GET_MESSAGES_FOR_CHATROOM = gql`
       chatroom {
         id
         name
-        users {
-          id
-          fullname
-          email
-          avatarUrl
-        }
       }
     }
   }

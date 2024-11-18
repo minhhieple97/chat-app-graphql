@@ -5,10 +5,8 @@
 type Chatroom {
   createdAt: DateTime
   id: ID
-  messages: [Message!]
   name: String
   updatedAt: DateTime
-  users: [User!]
 }
 
 type CurrentUserResponse {
@@ -118,6 +116,5 @@ type UserResponse {
 
 type UsersResponse {
   success: Boolean!
-  total: Float!
   users: [User!]!
 }
