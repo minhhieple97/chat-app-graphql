@@ -11,11 +11,9 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
 
   const { id } = useUserStore();
   const { toggleLoginModal } = useGeneralStore();
-
   useEffect(() => {
-    if (!id) {
-      toggleLoginModal(true);
-    }
+    if (!id) toggleLoginModal(true);
+    else toggleLoginModal(false);
   }, [id, toggleLoginModal]);
 
   const handleAuthClick = () => {

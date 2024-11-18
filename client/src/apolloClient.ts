@@ -6,25 +6,25 @@ import {
   split,
   HttpLink,
 } from '@apollo/client';
-import { WebSocketLink } from '@apollo/client/link/ws';
 import { loadErrorMessages, loadDevMessages } from '@apollo/client/dev';
 import { onError } from '@apollo/client/link/error';
 import { useUserStore } from './stores/userStore';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { tokenService } from './features/auth/services/token-service';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { createClient } from 'graphql-ws';
 
 loadErrorMessages();
 loadDevMessages();
 
-const wsLink = new WebSocketLink({
-  uri: `ws://localhost:3000/graphql`,
-  options: {
-    reconnect: true,
+const wsLink = new GraphQLWsLink(
+  createClient({
+    url: 'ws://localhost:3000/graphql',
     connectionParams: {
       Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
     },
-  },
-});
+  }),
+);
 const errorLink = onError(({ graphQLErrors, operation, forward }) => {
   if (!graphQLErrors) return;
 

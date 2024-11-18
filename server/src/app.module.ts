@@ -10,20 +10,22 @@ import { ApolloDriver } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { AwsModule } from './aws/aws.module';
-import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { TokenService } from './token/token.service';
 import { TokenModule } from './token/token.module';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
+import { PUB_SUB } from './pubsub/pubsub.module';
 const pubSub = new RedisPubSub({
   connection: {
     host: process.env.REDIS_HOST || 'localhost',
     port: parseInt(process.env.REDIS_PORT || '6379', 10),
+    username: process.env.REDIS_USERNAME,
+    password: process.env.REDIS_PASSWORD,
     retryStrategy: (times) => {
       // retry strategy
       return Math.min(times * 50, 2000);
     },
   },
 });
-
 @Module({
   imports: [
     AwsModule,
@@ -37,7 +39,6 @@ const pubSub = new RedisPubSub({
       driver: ApolloDriver,
       useFactory: async (tokenService: TokenService) => {
         return {
-          installSubscriptionHandlers: true,
           playground: true,
           autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
           sortSchema: true,
@@ -72,7 +73,7 @@ const pubSub = new RedisPubSub({
     TokenModule,
   ],
   controllers: [AppController],
-  providers: [AppService, TokenService],
+  providers: [AppService, TokenService, { provide: PUB_SUB, useValue: pubSub }],
   exports: [TokenService],
 })
 export class AppModule {}
