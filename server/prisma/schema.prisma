@@ -42,7 +42,7 @@ model Chatroom {
 model Message {
   id         Int      @id @default(autoincrement())
   content    String
-  imageId   String?
+  imageUrl   String?
   userId     Int
   chatroomId Int
   createdAt  DateTime @default(now())

@@ -125,21 +125,31 @@ export class UserService {
   }
 
   async searchUsers(
-    fullname: string,
+    searchTerm: string,
     userId: number,
   ): Promise<UserBasicInfo[]> {
     return this.prisma.user.findMany({
       where: {
-        fullname: {
-          contains: fullname,
-          mode: 'insensitive', // Case-insensitive search
-        },
+        OR: [
+          {
+            fullname: {
+              contains: searchTerm,
+              mode: 'insensitive',
+            },
+          },
+          {
+            email: {
+              contains: searchTerm,
+              mode: 'insensitive',
+            },
+          },
+        ],
         id: {
           not: userId, // Exclude current user
         },
       },
       orderBy: {
-        fullname: 'asc', // Sort alphabetically
+        fullname: 'asc',
       },
       select: {
         id: true,

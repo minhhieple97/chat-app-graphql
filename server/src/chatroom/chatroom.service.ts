@@ -92,12 +92,12 @@ export class ChatroomService {
     chatroomId: number,
     message: string,
     userId: number,
-    imageId: string,
+    imageUrl: string,
   ) {
     return await this.prisma.message.create({
       data: {
         content: message,
-        imageId,
+        imageUrl,
         chatroomId,
         userId,
       },

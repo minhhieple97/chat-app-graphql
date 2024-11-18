@@ -2,6 +2,15 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Chatroom {
+  createdAt: DateTime
+  id: ID
+  messages: [Message!]
+  name: String
+  updatedAt: DateTime
+  users: [User!]
+}
+
 type CurrentUserResponse {
   message: String
   success: Boolean!
@@ -25,21 +34,39 @@ type LoginResponse {
   success: Boolean!
 }
 
+type Message {
+  chatroom: Chatroom
+  content: String
+  createdAt: DateTime
+  id: ID
+  imageUrl: String
+  updatedAt: DateTime
+  user: User
+}
+
 type Mutation {
+  addUsersToChatroom(chatroomId: Float!, userIds: [Float!]!): Chatroom!
+  createChatroom(name: String!): Chatroom!
+  deleteChatroom(chatroomId: Float!): String!
   deleteUser: Boolean!
   login(loginInput: LoginDto!): LoginResponse!
   logout: String!
   refreshToken: RefreshTokenResponse!
   register(registerInput: RegisterDto!): RegisterResponse!
+  sendMessage(chatroomId: Float!, content: String!, image: Upload): Message!
   updateAvatar(base64Image: String!): User!
   updateUser(input: UpdateUserInput!): User!
+  userStartedTypingMutation(chatroomId: Float!): User!
+  userStoppedTypingMutation(chatroomId: Float!): User!
 }
 
 type Query {
+  getChatroomsForUser(userId: Float!): [Chatroom!]!
   getCurrentUser: CurrentUserResponse!
+  getMessagesForChatroom(chatroomId: Float!): [Message!]!
   getUser: UserResponse!
   getUsersOfChatroom(chatroomId: Float!): [User!]!
-  searchUsers(fullname: String!): UsersResponse!
+  searchUsers(searchTerm: String!): UsersResponse!
 }
 
 type RefreshTokenResponse {
@@ -59,11 +86,20 @@ type RegisterResponse {
   success: Boolean!
 }
 
+type Subscription {
+  newMessage(chatroomId: Float!): Message
+  userStartedTyping(chatroomId: Float!, userId: Float!): User
+  userStoppedTyping(chatroomId: Float!, userId: Float!): User
+}
+
 input UpdateUserInput {
   avatarData: String
   email: String
   fullname: String
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 type User {
   avatarUrl: String

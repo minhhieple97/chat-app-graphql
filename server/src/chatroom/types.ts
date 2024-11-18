@@ -28,7 +28,7 @@ export class Message {
   id?: string;
 
   @Field({ nullable: true })
-  imageId?: string;
+  imageUrl?: string;
 
   @Field({ nullable: true })
   content?: string;

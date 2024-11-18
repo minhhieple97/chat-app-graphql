@@ -16,9 +16,12 @@ export class UserResolver {
   }
 
   @Query(() => UsersResponse)
-  async searchUsers(@Args('fullname') fullname: string, @Context() context) {
+  async searchUsers(
+    @Args('searchTerm') searchTerm: string,
+    @Context() context,
+  ) {
     const userId = context.req.user.sub;
-    return this.userService.searchUsers(fullname, userId);
+    return this.userService.searchUsers(searchTerm, userId);
   }
 
   @Query(() => [User])
